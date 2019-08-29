@@ -19,6 +19,20 @@ public class RestTemplatePlugin {
         this.restTemplate = restTemplate;
     }
 
+    DarkSkyForecastDTO getDarkskyResource(String resourceUrl) {
+        DarkSkyForecastDTO resource = null;
+        try {
+            resource = restTemplate.getForObject(resourceUrl, DarkSkyForecastDTO.class);
+        } catch (HttpServerErrorException e) {
+            logger.error("HttpServerErrorException: {}", e.getMessage());
+            throw new HttpServerErrorException(e.getStatusCode());
+        } catch (Exception e) {
+            logger.error("Unexpected exception has happened: {}", e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+        return resource;
+    }
+
     GeocoderDTO getGoogleGeoResource(String resourceUrl) {
         GeocoderDTO resource = null;
         try {
